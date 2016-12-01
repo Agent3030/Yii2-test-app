@@ -1,0 +1,39 @@
+data:
+   image: busybox:latest
+   ports:
+     - "2293:22"
+   volumes:
+     - .:/var/www/test-app
+   links:
+     - db
+   tty: true
+
+fpm:
+  build: docker/php
+  volumes_from:
+    - data
+#  volumes:
+#    - ./docker/php/:/usr/local/etc/php/
+  expose:
+    - 9000
+  links:
+    - db
+
+nginx:
+  image: nginx:latest
+  volumes_from:
+    - data
+  ports:
+    - "8093:80"
+  volumes:
+    - ./docker/nginx/:/etc/nginx/conf.d/
+  links:
+    - fpm
+db:
+  image: postgres
+  ports:
+    - "54323:5432"
+  environment:
+    POSTGRES_DB: testapp
+    POSTGRES_PASSWORD: testapp
+    POSTGRES_USER: testapp
