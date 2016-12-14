@@ -79,7 +79,7 @@ class SignInController extends Controller
         $model = new LoginForm();
 
         if ($model->load(\Yii::$app->request->post()) && $model->login()) {
-            return $this->goHome();
+            return $this->redirect(['/user/default/index', 'id'=>Yii::$app->user->id]);
         }
 
         return $this->render('login', [

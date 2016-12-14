@@ -39,7 +39,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Signup', 'url' => ['/user/sign-in/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/user/sign-in/login']];
     } else {
-        $menuItems[] = ['label' => 'Pay for zip file', 'url' => ['/user/payment/index']];
+        $menuItems[] = ['label' => 'Image Gallery', 'url' => ['/user/default/index', 'id'=>Yii::$app->user->id]];
         $menuItems[] = '<li>'
             . Html::beginForm(['/user/sign-in/logout'], 'post')
             . Html::submitButton(
