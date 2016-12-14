@@ -47,12 +47,18 @@ class DefaultController extends Controller
         $model = new Images();
         //create image
         if($model->load(\Yii::$app->request->post())){
-            $model->user_id = $id;
+            $model->user_id = \Yii::$app->user->id;
             $image = UploadedFile::getInstance($model, 'image');
             if(isset($image)) {
+
                 $name = $image->name;
+                $name_arr = explode('.', $name);
+
+                $ext = $name_arr[1];
+                $newName = \Yii::$app->security->generateRandomString(8).'.'.$ext;
+
                 $url = "img";
-                $model->image_path = $url.DIRECTORY_SEPARATOR.$name;
+                $model->image_path = $url.DIRECTORY_SEPARATOR.$newName;
             }
 
 
@@ -69,7 +75,7 @@ class DefaultController extends Controller
         //output and edit images
 
         $query = Images::find()
-            ->where(['user_id'=>$id])
+            ->where(['user_id'=>\Yii::$app->user->id])
             ->andWhere(['status'=>Images::IMAGE_ACTIVE]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -121,7 +127,7 @@ class DefaultController extends Controller
 
         }
 
-        if(file_exists($path)) {
+        if(isset($image->image_path)) {
             unlink($path);
         }
 
